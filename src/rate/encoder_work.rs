@@ -71,7 +71,7 @@ impl EncoderWork {
         }
     }
 
-    pub(crate) fn encode_begin(&mut self) -> Result<(ShardsRefMut, usize, usize), Error> {
+    pub(crate) fn encode_begin(&mut self) -> Result<(ShardsRefMut<'_>, usize, usize), Error> {
         if self.original_received_count == self.original_count {
             Ok((
                 self.shards.as_ref_mut(),

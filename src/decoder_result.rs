@@ -24,7 +24,7 @@ impl DecoderResult<'_> {
 
     /// Returns iterator over all restored original shards
     /// and their indexes, ordered by indexes.
-    pub fn restored_original_iter(&self) -> RestoredOriginal {
+    pub fn restored_original_iter(&self) -> RestoredOriginal<'_> {
         RestoredOriginal::new(self.work)
     }
 }

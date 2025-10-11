@@ -124,7 +124,7 @@ where
     fn add_original_shard<T: AsRef<[u8]>>(&mut self, original_shard: T) -> Result<(), Error>;
 
     /// Like [`ReedSolomonEncoder::encode`](crate::ReedSolomonEncoder::encode).
-    fn encode(&mut self) -> Result<EncoderResult, Error>;
+    fn encode(&mut self) -> Result<EncoderResult<'_>, Error>;
 
     /// Consumes this encoder returning its [`Engine`] and [`EncoderWork`]
     /// so that they can be re-used by another encoder.
@@ -201,7 +201,7 @@ where
     ) -> Result<(), Error>;
 
     /// Like [`ReedSolomonDecoder::decode`](crate::ReedSolomonDecoder::decode).
-    fn decode(&mut self) -> Result<DecoderResult, Error>;
+    fn decode(&mut self) -> Result<DecoderResult<'_>, Error>;
 
     /// Consumes this decoder returning its [`Engine`] and [`DecoderWork`]
     /// so that they can be re-used by another decoder.

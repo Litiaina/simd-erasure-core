@@ -15,7 +15,7 @@ pub(crate) struct Shards {
 }
 
 impl Shards {
-    pub(crate) fn as_ref_mut(&mut self) -> ShardsRefMut {
+    pub(crate) fn as_ref_mut(&mut self) -> ShardsRefMut<'_> {
         ShardsRefMut::new(self.shard_count, self.shard_len_64, self.data.as_mut())
     }
 
@@ -190,7 +190,7 @@ impl<'a> ShardsRefMut<'a> {
 
     /// Splits this [`ShardsRefMut`] into two so that
     /// first includes shards `0..mid` and second includes shards `mid..`.
-    pub fn split_at_mut(&mut self, mid: usize) -> (ShardsRefMut, ShardsRefMut) {
+    pub fn split_at_mut(&mut self, mid: usize) -> (ShardsRefMut<'_>, ShardsRefMut<'_>) {
         let (a, b) = self.data.split_at_mut(mid * self.shard_len_64);
 
         (
