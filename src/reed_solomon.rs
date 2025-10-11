@@ -32,7 +32,7 @@ impl ReedSolomonEncoder {
     /// See [basic usage](crate#basic-usage) for an example.
     ///
     /// [`reset`]: ReedSolomonEncoder::reset
-    pub fn encode(&mut self) -> Result<EncoderResult, Error> {
+    pub fn encode(&mut self) -> Result<EncoderResult<'_>, Error> {
         self.0.encode()
     }
 
@@ -130,7 +130,7 @@ impl ReedSolomonDecoder {
     /// See [basic usage](crate#basic-usage) for an example.
     ///
     /// [`reset`]: ReedSolomonDecoder::reset
-    pub fn decode(&mut self) -> Result<DecoderResult, Error> {
+    pub fn decode(&mut self) -> Result<DecoderResult<'_>, Error> {
         self.0.decode()
     }
 

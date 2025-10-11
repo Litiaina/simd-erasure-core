@@ -121,7 +121,7 @@ impl DecoderWork {
     // - Returned `FixedBitSet` may contain extra zero bits.
     pub(crate) fn decode_begin(
         &mut self,
-    ) -> Result<Option<(ShardsRefMut, usize, usize, &FixedBitSet)>, Error> {
+    ) -> Result<Option<(ShardsRefMut<'_>, usize, usize, &FixedBitSet)>, Error> {
         if self.original_received_count + self.recovery_received_count < self.original_count {
             Err(Error::NotEnoughShards {
                 original_count: self.original_count,

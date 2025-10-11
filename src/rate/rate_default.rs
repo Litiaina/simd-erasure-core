@@ -114,7 +114,7 @@ impl<E: Engine> RateEncoder<E> for DefaultRateEncoder<E> {
         }
     }
 
-    fn encode(&mut self) -> Result<EncoderResult, Error> {
+    fn encode(&mut self) -> Result<EncoderResult<'_>, Error> {
         match &mut self.0 {
             InnerEncoder::High(high) => high.encode(),
             InnerEncoder::Low(low) => low.encode(),
@@ -258,7 +258,7 @@ impl<E: Engine> RateDecoder<E> for DefaultRateDecoder<E> {
         }
     }
 
-    fn decode(&mut self) -> Result<DecoderResult, Error> {
+    fn decode(&mut self) -> Result<DecoderResult<'_>, Error> {
         match &mut self.0 {
             InnerDecoder::High(high) => high.decode(),
             InnerDecoder::Low(low) => low.decode(),

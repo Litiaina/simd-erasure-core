@@ -28,7 +28,7 @@ impl EncoderResult<'_> {
     ///
     /// Recovery shards have indexes `0..recovery_count`
     /// and these same indexes must be used when decoding.
-    pub fn recovery_iter(&self) -> Recovery {
+    pub fn recovery_iter(&self) -> Recovery<'_> {
         Recovery::new(self.work)
     }
 }

@@ -41,7 +41,7 @@ impl<E: Engine> RateEncoder<E> for LowRateEncoder<E> {
         self.work.add_original_shard(original_shard)
     }
 
-    fn encode(&mut self) -> Result<EncoderResult, Error> {
+    fn encode(&mut self) -> Result<EncoderResult<'_>, Error> {
         let (mut work, original_count, recovery_count) = self.work.encode_begin()?;
         let chunk_size = original_count.next_power_of_two();
         let engine = &self.engine;
@@ -169,7 +169,7 @@ impl<E: Engine> RateDecoder<E> for LowRateDecoder<E> {
         self.work.add_recovery_shard(index, recovery_shard)
     }
 
-    fn decode(&mut self) -> Result<DecoderResult, Error> {
+    fn decode(&mut self) -> Result<DecoderResult<'_>, Error> {
         let Some((mut work, original_count, recovery_count, received)) =
             self.work.decode_begin()?
         else {
