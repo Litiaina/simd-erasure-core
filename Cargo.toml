@@ -1,10 +1,9 @@
 [package]
-name = "reed-solomon-simd"
+name = "simd-erasure-core"
 version = "3.1.0"
 license = "MIT AND BSD-3-Clause"
-description = "Reed-Solomon coding with O(n log n) complexity. Leverages SIMD instructions on x86(-64) and AArch64."
-repository = "https://github.com/AndersTrier/reed-solomon-simd"
-keywords = ["erasure", "reed-solomon", "Leopard-RS"]
+description = "Internal SIMD-accelerated erasure coding core used by N1/N2."
+keywords = ["erasure", "reed-solomon", "simd", "fec", "parity"]
 categories = ["algorithms", "encoding"]
 edition = "2021"
 rust-version = "1.82"

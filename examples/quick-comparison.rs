@@ -47,10 +47,10 @@ fn test_reed_solomon_simd(count: usize) {
     let start = Instant::now();
 
     // This table is only used in decoding.
-    reed_solomon_simd::engine::tables::get_log_walsh();
+    simd_erasure_core::engine::tables::get_log_walsh();
 
     // This initializes the remaining needed tables.
-    reed_solomon_simd::engine::DefaultEngine::new();
+    simd_erasure_core::engine::DefaultEngine::new();
 
     let elapsed = start.elapsed();
     print!("> reed-solomon-simd        {:9}", elapsed.as_micros());
@@ -66,7 +66,7 @@ fn test_reed_solomon_simd(count: usize) {
     // ENCODE
 
     let start = Instant::now();
-    let recovery = reed_solomon_simd::encode(count, count, &original).unwrap();
+    let recovery = simd_erasure_core::encode(count, count, &original).unwrap();
     let elapsed = start.elapsed();
     print!("{:14}", elapsed.as_micros());
 
@@ -77,7 +77,7 @@ fn test_reed_solomon_simd(count: usize) {
     // DECODE
 
     let start = Instant::now();
-    let restored = reed_solomon_simd::decode(count, count, [(0, ""); 0], decoder_recovery).unwrap();
+    let restored = simd_erasure_core::decode(count, count, [(0, ""); 0], decoder_recovery).unwrap();
     let elapsed = start.elapsed();
     println!("{:14}", elapsed.as_micros());
 

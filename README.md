@@ -1,6 +1,6 @@
 # simd-erasure-core
 
-Reed-Solomon erasure coding based on [Leopard-RS], featuring:
+Reed-Solomon erasure coding, featuring:
 
 - `O(n log n)` complexity.
 - Entirely written in Rust.
@@ -32,7 +32,7 @@ fallback to plain Rust.
 | 256 : 256           | 6.3753 GiB/s | 1.0391 GiB/s ; 1.0323 GiB/s |
 | 512 : 512           | 5.5076 GiB/s | 1.1862 GiB/s ; 1.2542 GiB/s |
 | 1024 : 1024         | 4.8495 GiB/s | 1.3017 GiB/s ; 1.4178 GiB/s |
-| 2048 : 2048         | 4.3733 GiB/s | 1.3341 GiB/s ; 1.4640 GiB/s |
+| 2048 : 2048         | 4.3733 GiB/s | 1.3341 GiB/s ; 1.4640 MiB/s |
 | 4096 : 4096         | 3.9926 GiB/s | 1.2008 GiB/s ; 1.3585 GiB/s |
 | 8192 : 8192         | 3.1220 GiB/s | 942.68 MiB/s ; 1012.5 MiB/s |
 | 16384 : 16384       | 2.2468 GiB/s | 701.36 MiB/s ; 687.75 MiB/s |
@@ -60,8 +60,8 @@ fallback to plain Rust.
       [`add_recovery_shard`][RSD::add_recovery_shard] and
       [`decode`][RSD::decode] of [`ReedSolomonDecoder`].
 
+To run benchmarks:
 
-I invite you to clone [reed-solomon-simd] and run your own benchmark:
 ```sh
 $ cargo bench main
 ```
@@ -71,8 +71,8 @@ $ cargo bench main
 1. Divide data into equal-sized original shards.
    Shard size must be even (`shard.len() % 2 == 0`).
 2. Decide how many recovery shards you want.
-3. Generate recovery shards with [`reed_solomon_simd::encode`].
-4. When some original shards get lost, restore them with [`reed_solomon_simd::decode`].
+3. Generate recovery shards with [`simd_erasure_core::encode`].
+4. When some original shards get lost, restore them with [`simd_erasure_core::decode`].
     - You must provide at least as many shards as there were original shards in total,
       in any combination of original shards and recovery shards.
 
@@ -91,13 +91,13 @@ let original = [
     b"nim ad minim veniam, quis nostrud exercitation ullamco laboris n",
 ];
 
-let recovery = reed_solomon_simd::encode(
+let recovery = simd_erasure_core::encode(
     3, // total number of original shards
     5, // total number of recovery shards
     original, // all original shards
 )?;
 
-let restored = reed_solomon_simd::decode(
+let restored = simd_erasure_core::decode(
     3, // total number of original shards
     5, // total number of recovery shards
     [  // provided original shards with indexes
@@ -111,7 +111,7 @@ let restored = reed_solomon_simd::decode(
 
 assert_eq!(restored[&0], original[0]);
 assert_eq!(restored[&2], original[2]);
-# Ok::<(), reed_solomon_simd::Error>(())
+# Ok::<(), simd_erasure_core::Error>(())
 ```
 
 ## Basic usage
@@ -122,7 +122,7 @@ of the encoding/decoding process.
 Here's the above example using these instead:
 
 ```rust
-use reed_solomon_simd::{ReedSolomonDecoder, ReedSolomonEncoder};
+use simd_erasure_core::{ReedSolomonDecoder, ReedSolomonEncoder};
 use std::collections::HashMap;
 
 let original = [
@@ -159,28 +159,13 @@ let restored: HashMap<_, _> = result.restored_original_iter().collect();
 
 assert_eq!(restored[&0], original[0]);
 assert_eq!(restored[&2], original[2]);
-# Ok::<(), reed_solomon_simd::Error>(())
+# Ok::<(), simd_erasure_core::Error>(())
 ```
 
 ## Advanced usage
 
 See [`rate`][mod:rate] module for advanced encoding/decoding
 using chosen [`Engine`] and [`Rate`].
-
-## Benchmarks against other crates
-
-Use `cargo run --release --example quick-comparison`
-to run few simple benchmarks against [`reed-solomon-16`], [`reed-solomon-erasure`], [`reed-solomon-novelpoly`] and [`leopard-codec`] crates.
-
-This crate is the fastest in all cases on my AMD Ryzen 5 3600, except in the
-case of decoding with about 42 or fewer recovery shards.
-There's also a one-time initialization (< 10 ms) for computing tables
-which can dominate at really small data amounts.
-
-[`reed-solomon-16`]: https://crates.io/crates/reed-solomon-16
-[`reed-solomon-erasure`]: https://crates.io/crates/reed-solomon-erasure
-[`reed-solomon-novelpoly`]: https://crates.io/crates/reed-solomon-novelpoly
-[`leopard-codec`]: https://crates.io/crates/leopard-codec
 
 ## Running tests
 
@@ -189,39 +174,25 @@ Use `cargo test -- --ignored` to run those.
 
 ## Safety
 
-The only use of `unsafe` in this crate is to allow for target specific optimizations in [`Ssse3`], [`Avx2`] and [`Neon`].
+The only use of `unsafe` in this crate is to allow for target specific optimizations in SIMD backends.
 
 ## Compatibility
 
 Starting from version 3.0.0, shard sizes that are not multiples of 64 are supported. However, if your shard size is a multiple of 64, it remains compatible across all versions.
 
-## Credits
+## License
 
-This crate is a fork Markus Laire's [`reed-solomon-16`] crate, which in turn
-is based on [Leopard-RS] by Christopher A. Taylor.
+See `LICENSE`.
 
-[Leopard-RS]: https://github.com/catid/leopard
-[reed-solomon-simd]: https://github.com/AndersTrier/reed-solomon-simd
-
-[`Naive`]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/engine/struct.Naive.html
-[`NoSimd`]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/engine/struct.NoSimd.html
-[`Ssse3`]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/engine/struct.Ssse3.html
-[`Avx2`]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/engine/struct.Avx2.html
-[`Neon`]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/engine/struct.Neon.html
-
-[`ReedSolomonEncoder`]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/struct.ReedSolomonEncoder.html
-[RSE::add_original_shard]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/struct.ReedSolomonEncoder.html#method.add_original_shard
-[RSE::encode]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/struct.ReedSolomonEncoder.html#method.encode
-
-[`ReedSolomonDecoder`]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/struct.ReedSolomonDecoder.html
-[RSD::add_original_shard]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/struct.ReedSolomonDecoder.html#method.add_original_shard
-[RSD::add_recovery_shard]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/struct.ReedSolomonDecoder.html#method.add_recovery_shard
-[RSD::decode]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/struct.ReedSolomonDecoder.html#method.decode
-
-[`Engine`]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/engine/trait.Engine.html
-[`Rate`]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/rate/trait.Rate.html
-
-[mod:rate]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/rate/index.html
-
-[`reed_solomon_simd::encode`]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/fn.encode.html
-[`reed_solomon_simd::decode`]: https://docs.rs/reed-solomon-simd/3.1.0/reed_solomon_simd/fn.decode.html
+[RSE::add_original_shard]: # 
+[RSE::encode]: #
+[RSD::add_original_shard]: #
+[RSD::add_recovery_shard]: #
+[RSD::decode]: #
+[`ReedSolomonEncoder`]: #
+[`ReedSolomonDecoder`]: #
+[`Engine`]: #
+[`Rate`]: #
+[mod:rate]: #
+[`simd_erasure_core::encode`]: #
+[`simd_erasure_core::decode`]: #

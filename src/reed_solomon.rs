@@ -74,7 +74,7 @@ impl ReedSolomonEncoder {
     /// # Examples
     ///
     /// ```rust
-    /// use reed_solomon_simd::ReedSolomonEncoder;
+    /// use simd_erasure_core::ReedSolomonEncoder;
     ///
     /// assert_eq!(ReedSolomonEncoder::supports(60_000, 4_000), true);
     /// assert_eq!(ReedSolomonEncoder::supports(60_000, 5_000), false);
@@ -172,7 +172,7 @@ impl ReedSolomonDecoder {
     /// # Examples
     ///
     /// ```rust
-    /// use reed_solomon_simd::ReedSolomonDecoder;
+    /// use simd_erasure_core::ReedSolomonDecoder;
     ///
     /// assert_eq!(ReedSolomonDecoder::supports(60_000, 4_000), true);
     /// assert_eq!(ReedSolomonDecoder::supports(60_000, 5_000), false);

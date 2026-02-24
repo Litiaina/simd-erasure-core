@@ -1,17 +1,17 @@
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 
-use reed_solomon_simd::engine::{DefaultEngine, Engine, Naive, NoSimd};
-use reed_solomon_simd::rate::{
+use simd_erasure_core::engine::{DefaultEngine, Engine, Naive, NoSimd};
+use simd_erasure_core::rate::{
     DefaultRateDecoder, DefaultRateEncoder, HighRate, LowRate, Rate, RateDecoder, RateEncoder,
 };
-use reed_solomon_simd::Error;
+use simd_erasure_core::Error;
 
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-use reed_solomon_simd::engine::{Avx2, Ssse3};
+use simd_erasure_core::engine::{Avx2, Ssse3};
 
 #[cfg(target_arch = "aarch64")]
-use reed_solomon_simd::engine::Neon;
+use simd_erasure_core::engine::Neon;
 
 // ======================================================================
 // TESTS - HELPERS

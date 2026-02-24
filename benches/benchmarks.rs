@@ -4,7 +4,7 @@ use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Through
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 
-use reed_solomon_simd::{
+use simd_erasure_core::{
     engine::{DefaultEngine, Engine, Naive, NoSimd, ShardsRefMut, GF_ORDER},
     rate::{
         HighRateDecoder, HighRateEncoder, LowRateDecoder, LowRateEncoder, RateDecoder, RateEncoder,
@@ -13,10 +13,10 @@ use reed_solomon_simd::{
 };
 
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-use reed_solomon_simd::engine::{Avx2, Ssse3};
+use simd_erasure_core::engine::{Avx2, Ssse3};
 
 #[cfg(target_arch = "aarch64")]
-use reed_solomon_simd::engine::Neon;
+use simd_erasure_core::engine::Neon;
 
 // ======================================================================
 // CONST
@@ -84,7 +84,7 @@ fn benchmarks_main(c: &mut Criterion) {
 
         let original = generate_shards(original_count, SHARD_BYTES, 0);
         let recovery =
-            reed_solomon_simd::encode(original_count, recovery_count, &original).unwrap();
+            simd_erasure_core::encode(original_count, recovery_count, &original).unwrap();
 
         group.throughput(Throughput::Bytes(
             ((original_count + recovery_count) * SHARD_BYTES) as u64,
@@ -171,7 +171,7 @@ fn benchmarks_rate_one<E: Engine>(c: &mut Criterion, name: &str, new_engine: fn(
     ] {
         let original = generate_shards(original_count, SHARD_BYTES, 0);
         let recovery =
-            reed_solomon_simd::encode(original_count, recovery_count, &original).unwrap();
+            simd_erasure_core::encode(original_count, recovery_count, &original).unwrap();
 
         group.throughput(Throughput::Bytes(
             ((original_count + recovery_count) * SHARD_BYTES) as u64,
