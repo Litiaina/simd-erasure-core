@@ -49,11 +49,11 @@ pub enum Error {
     /// Given shard has different size than given or inferred shard size.
     ///
     /// - Shard size is given explicitly to encoders/decoders
-    ///   and inferred for [`reed_solomon_simd::encode`]
-    ///   and [`reed_solomon_simd::decode`].
+    ///   and inferred for [`simd_erasure_core::encode`]
+    ///   and [`simd_erasure_core::decode`].
     ///
-    /// [`reed_solomon_simd::encode`]: crate::encode
-    /// [`reed_solomon_simd::decode`]: crate::decode
+    /// [`simd_erasure_core::encode`]: crate::encode
+    /// [`simd_erasure_core::decode`]: crate::decode
     DifferentShardSize {
         /// Given or inferred shard size.
         shard_bytes: usize,
@@ -95,11 +95,11 @@ pub enum Error {
     /// Size must be non-zero and even.
     ///
     /// - Shard size is given explicitly to encoders/decoders
-    ///   and inferred for [`reed_solomon_simd::encode`]
-    ///   and [`reed_solomon_simd::decode`].
+    ///   and inferred for [`simd_erasure_core::encode`]
+    ///   and [`simd_erasure_core::decode`].
     ///
-    /// [`reed_solomon_simd::encode`]: crate::encode
-    /// [`reed_solomon_simd::decode`]: crate::decode
+    /// [`simd_erasure_core::encode`]: crate::encode
+    /// [`simd_erasure_core::decode`]: crate::decode
     InvalidShardSize {
         /// Given or inferred shard size.
         shard_bytes: usize,
