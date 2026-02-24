@@ -1,4 +1,4 @@
-# reed-solomon-simd
+# simd-erasure-core
 
 Reed-Solomon erasure coding based on [Leopard-RS], featuring:
 
